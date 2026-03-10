@@ -1,0 +1,40 @@
+Please implement the requirement described in docs/REQ-12-roi-worker.md exactly as specified.
+
+Key deliverables:
+
+1. Add Trader.roiPercent field to prisma/schema.prisma:
+   - roiPercent Float? on the Trader model
+   Run npm run db:migrate.
+
+2. Seed two new AppSetting keys in prisma/seed.ts:
+   - roiWorkerIntervalSeconds = "3600"
+   - telegramBatchDelayMs = "1000"
+
+3. Create src/workers/roiWorker.ts:
+   - Export start(): void and stop(): Promise<void>
+   - On start(): read AppSetting.roiWorkerIntervalSeconds, run first cycle immediately, then setInterval
+   - Each cycle: fetch all active traders, call GET https://data-api.polymarket.com/v1/leaderboard?category=OVERALL&timePeriod=ALL&orderBy=PNL&limit=1000, match each trader by walletAddress, update Trader.roiPercent with the percentPnl field
+   - If a trader is not in the leaderboard response, leave roiPercent unchanged (do not null it)
+   - Per-trader fetch errors: log and continue (do not abort the run)
+   - Concurrency guard: if previous cycle still running, skip tick and log warning
+   - Write one WorkerLog row per cycle: workerName="roiWorker", tradersChecked, tradesFound=0, alertsSent=0, error (null on success)
+   - No imports from src/bot/
+
+4. Update src/workers/tradeWorker.ts:
+   - After fetching the leaderboard, filter out traders where isActive = false before calling fetchRecentTrades
+   - Export start(): void and stop(): Promise<void> (same pattern as roiWorker)
+
+5. Update src/services/alertDeliveryService.ts:
+   - Replace the sequential per-user send loop with a batched loop
+   - Batch size: 25 messages per batch
+   - Read telegramBatchDelayMs from AppSetting once per deliverAlertGroup call
+   - Insert delay between batches only (not after the final batch)
+   - All quota checks, UserAlertDelivery writes, and error isolation from REQ-8 remain unchanged
+
+6. Update src/workers/index.ts (or create it):
+   - Import start/stop from tradeWorker and roiWorker
+   - Register SIGTERM and SIGINT handlers
+   - On signal: clear all intervals (via stop()), await all in-progress cycles, call process.exit(0)
+   - Hard timeout: if cycles haven't resolved after 30 seconds, call process.exit(0) anyway
+
+When done, run npm run build to confirm zero TypeScript errors.

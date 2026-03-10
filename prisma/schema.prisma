@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int                       @id @default(autoincrement())
+  telegramId           BigInt                    @unique
+  username             String?
+  firstName            String
+  languageCode         String                    @default("en")
+  categoryId           Int?
+  freeAlertsUsed       Int                       @default(0)
+  isSubscribed         Boolean                   @default(false)
+  subscriptionExpiresAt DateTime?
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  category             Category?                 @relation(fields: [categoryId], references: [id])
+  deliveries           UserAlertDelivery[]
+  payments             Payment[]
+  categoryPreferences  UserCategoryPreference[]
+  subscriptions        UserSubscription[]
+}
+
+model Plan {
+  id               Int                  @id @default(autoincrement())
+  name             String
+  slug             String               @unique
+  price            Int
+  currency         String               @default("USD")
+  billingPeriodDays Int?
+  alertQuota       Int?
+  isActive         Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  categoryAccess   PlanCategoryAccess[]
+  payments         Payment[]
+  subscriptions    UserSubscription[]
+}
+
+model Category {
+  id                Int                  @id @default(autoincrement())
+  slug              String               @unique
+  name              String
+  description       String?
+  sourceIdentifier  String?
+  sourceKey         String?
+  parentCategoryId  Int?
+  isActive          Boolean              @default(true)
+  isVisibleToUsers  Boolean              @default(true)
+  displayOrder      Int                  @default(0)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  parent            Category?            @relation("CategoryParent", fields: [parentCategoryId], references: [id])
+  children          Category[]           @relation("CategoryParent")
+  planAccess        PlanCategoryAccess[]
+  traders           Trader[]
+  users             User[]
+  userPreferences   UserCategoryPreference[]
+}
+
+model PlanCategoryAccess {
+  planId     Int
+  categoryId Int
+  plan       Plan     @relation(fields: [planId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([planId, categoryId])
+}
+
+model Trader {
+  id              Int          @id @default(autoincrement())
+  walletAddress   String       @unique
+  categoryId      Int?
+  alias           String       @unique
+  aliasOverride   String?
+  roi30d          Decimal?
+  roiPercent      Float?
+  roiUpdatedAt    DateTime?
+  rank            Int?
+  isTracked       Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  category        Category?    @relation(fields: [categoryId], references: [id])
+  trades          Trade[]
+  alertGroups     AlertGroup[]
+}
+
+model Market {
+  id           Int          @id @default(autoincrement())
+  externalId   String       @unique
+  title        String
+  canonicalUrl String
+  affiliateUrl String?
+  source       String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  trades       Trade[]
+  alertGroups  AlertGroup[]
+}
+
+model Trade {
+  id         Int         @id @default(autoincrement())
+  traderId   Int
+  marketId   Int
+  action     String
+  size       Decimal
+  price      Decimal
+  outcome    String?
+  tradedAt   DateTime
+  source     String
+  externalId String      @unique
+  createdAt  DateTime    @default(now())
+  trader     Trader      @relation(fields: [traderId], references: [id])
+  market     Market      @relation(fields: [marketId], references: [id])
+  alertGroup AlertGroup?
+}
+
+model AlertGroup {
+  id         Int                  @id @default(autoincrement())
+  tradeId    Int                  @unique
+  traderId   Int
+  marketId   Int
+  context    String
+  totalSize  Decimal
+  avgPrice   Decimal
+  tradeCount Int                  @default(1)
+  createdAt  DateTime             @default(now())
+  trade      Trade                @relation(fields: [tradeId], references: [id])
+  trader     Trader               @relation(fields: [traderId], references: [id])
+  market     Market               @relation(fields: [marketId], references: [id])
+  deliveries UserAlertDelivery[]
+}
+
+model UserAlertDelivery {
+  id           Int        @id @default(autoincrement())
+  userId       Int
+  alertGroupId Int
+  status       String
+  sentAt       DateTime?
+  errorMessage String?
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id])
+  alertGroup   AlertGroup @relation(fields: [alertGroupId], references: [id])
+
+  @@unique([userId, alertGroupId])
+}
+
+model Payment {
+  id                      Int       @id @default(autoincrement())
+  userId                  Int
+  planId                  Int
+  amount                  Decimal
+  currency                String
+  provider                String
+  telegramPaymentChargeId String?
+  providerChargeId        String?
+  status                  String
+  paidAt                  DateTime?
+  expiresAt               DateTime?
+  createdAt               DateTime  @default(now())
+  user                    User      @relation(fields: [userId], references: [id])
+  plan                    Plan      @relation(fields: [planId], references: [id])
+}
+
+model UserCategoryPreference {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  categoryId Int
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId])
+}
+
+model AppSetting {
+  key       String   @id @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model AdminAuditLog {
+  id        Int      @id @default(autoincrement())
+  adminUser String
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+}
+
+model UserSubscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  planId    Int
+  status    String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  plan      Plan     @relation(fields: [planId], references: [id])
+}
+
+model WorkerLog {
+  id              Int      @id @default(autoincrement())
+  workerName      String
+  status          String
+  message         String?
+  durationMs      Int?
+  tradersChecked  Int      @default(0)
+  tradesFound     Int      @default(0)
+  alertsSent      Int      @default(0)
+  error           String?
+  createdAt       DateTime @default(now())
+}

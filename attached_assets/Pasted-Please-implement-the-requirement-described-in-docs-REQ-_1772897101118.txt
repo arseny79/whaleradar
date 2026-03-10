@@ -1,0 +1,38 @@
+Please implement the requirement described in docs/REQ-10-i18n.md exactly as specified.
+
+Key deliverables:
+
+1. Create src/i18n/en.json, src/i18n/ru.json, src/i18n/lv.json:
+   - Scan ALL hardcoded user-facing strings in src/bot/commands/*.ts, src/alerts/formatter.ts (or equivalent REQ-7 file), and src/bot/payments/*.ts
+   - Create namespaced keys: commands.start.*, commands.help.*, commands.pricing.*, commands.subscribe.*, commands.categories.*, commands.language.*, alerts.*, payments.*
+   - Use {{placeholder}} syntax for interpolated values (e.g., firstName, planName, startDate, endDate, quota)
+   - en.json = English originals; ru.json = Russian translations; lv.json = Latvian translations
+   - All three files must have identical key sets
+
+2. Create src/i18n/index.ts:
+   - Export SupportedLang type: 'en' | 'ru' | 'lv'
+   - Export t(key: string, lang: SupportedLang, params?: Record<string, string | number>): string
+     * Looks up key in requested lang JSON, falls back to en if missing
+     * Replaces {{placeholder}} tokens with params values
+     * Returns key string if missing from both lang and en (never throws)
+   - Export invalidateLangCache(telegramId: string): void (clears the cache entry for that user)
+
+3. Create src/bot/middleware/i18n.ts:
+   - Module-level cache: Map<string, { lang: SupportedLang; cachedAt: number }> with 5-minute TTL
+   - Resolution order: cache → User.languageCode from DB → ctx.from.language_code (primary subtag before '-', must be in ['en','ru','lv']) → 'en'
+   - Attaches ctx.t(key, params?) as a pre-bound wrapper around t()
+   - Writes cache after DB lookup; invalidateLangCache() clears individual entries
+
+4. Extend Telegraf context type to include t(key: string, params?: Record<string, string | number>): string
+
+5. Register the i18n middleware in src/bot/index.ts BEFORE all command handlers
+
+6. Migrate all hardcoded strings:
+   - src/bot/commands/*.ts → use ctx.t()
+   - src/alerts/formatter.ts (REQ-7) → add lang: SupportedLang parameter, use t(key, lang)
+   - src/bot/payments/paymentService.ts and paymentHandlers.ts (REQ-9) → use ctx.t() where ctx is available; pass lang explicitly where it isn't
+   - Update alert delivery (REQ-8 fanout) to pass user.languageCode to the formatter
+
+7. Call invalidateLangCache(telegramId) in the /language command handler after saving the new language to DB
+
+When done, run npm run build to confirm zero TypeScript errors.

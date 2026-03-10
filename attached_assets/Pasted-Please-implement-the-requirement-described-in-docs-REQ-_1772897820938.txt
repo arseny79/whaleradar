@@ -1,0 +1,51 @@
+Please implement the requirement described in docs/REQ-11-admin-panel.md exactly as specified.
+
+Key deliverables:
+
+1. Add 3 new Prisma models to prisma/schema.prisma and run npm run db:migrate:
+   - AppSetting: id, key (unique), value, updatedAt
+   - WorkerLog: id, workerName, tradersChecked, tradesFound, alertsSent, error (nullable), createdAt
+   - AdminAuditLog: id, adminUser, action, entity, entityId (nullable), before (Json nullable), after (Json nullable), createdAt
+   Seed AppSetting with: minTradeSizeUsd=250, pollingIntervalSeconds=30, maxTradersPerCategory=100, alertMergeWindowMinutes=15
+
+2. Create src/admin/templates/layout.ts:
+   - Export renderLayout(title: string, activeSection: string, body: string): string
+   - Renders a full HTML page with a top nav bar linking to all 7 sections (Categories, Plans, Plan Access, Settings, Traders, Audit Log, Worker Logs)
+   - The link matching activeSection gets a visually active style
+
+3. Update existing admin templates (REQ-2 categories) to use renderLayout
+
+4. Create service files (no direct Prisma in route handlers):
+   - src/services/planService.ts — getPlan(id), updatePlan(id, data), listPlans()
+   - src/services/settingsService.ts — getAllSettings(), upsertSetting(key, value)
+   - src/services/planAccessService.ts — getMatrix(), replaceAll(matrix: Record<string, string[]>)
+   - src/services/traderAdminService.ts — listTraders(page, perPage), toggleActive(id), updateAlias(id, alias)
+
+5. Create route files under src/admin/routes/:
+   - plans.ts — GET /admin/plans, GET /admin/plans/:id/edit, POST /admin/plans/:id
+   - planAccess.ts — GET /admin/plan-access, POST /admin/plan-access
+   - settings.ts — GET /admin/settings, POST /admin/settings
+   - traders.ts — GET /admin/traders, POST /admin/traders/:id/toggle-active, POST /admin/traders/:id/alias
+   - auditLog.ts — GET /admin/audit-log (read-only, 100 rows newest-first)
+   - workerLogs.ts — GET /admin/worker-logs (read-only, 50 rows newest-first)
+
+6. Key implementation details:
+   - Wallet display: first 6 + last 4 chars separated by … (e.g., 0x1234…abcd)
+   - Edit Alias: use a <details> element in the table row — no JavaScript needed
+   - Audit log before/after: <details><summary>before</summary>...</details>
+   - Plan-access POST: delete all PlanCategoryAccess rows then insert checked cells in a single Prisma transaction
+   - Settings POST: only write AdminAuditLog for keys whose value actually changed
+   - Validation errors: re-render form with inline error messages, no DB writes
+
+7. Register all new routes on the existing Express admin router in src/admin/index.ts
+
+8. Update REQ-6 trade worker to:
+   - Read pollingIntervalSeconds and minTradeSizeUsd from AppSetting (via settingsService) instead of hardcoded values
+   - Write a WorkerLog row after each run with tradersChecked, tradesFound, alertsSent, error
+
+9. Update REQ-8 alert delivery to read alertMergeWindowMinutes from AppSetting
+
+When done, run npm run build to confirm zero TypeScript errors.
+```
+
+---

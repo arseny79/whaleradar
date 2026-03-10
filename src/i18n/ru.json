@@ -1,0 +1,57 @@
+{
+  "commands.start.welcome_title": "🐋 Добро пожаловать в WhaleRadar!",
+  "commands.start.welcome_description": "Отслеживайте крупные сделки на рынках прогнозов в реальном времени.",
+  "commands.start.language_detected": "🌐 Определён язык: Русский",
+  "commands.start.quota_explanation": "📊 У вас {{count}} бесплатных оповещений. После этого перейдите на Pro для безлимитных оповещений!\n\nВведите /pricing для просмотра планов.",
+
+  "commands.help.title": "📖 Доступные команды:",
+  "commands.help.start": "/start — Запустить бота и настроить предпочтения",
+  "commands.help.help": "/help — Показать это справочное сообщение",
+  "commands.help.pricing": "/pricing — Просмотр планов подписки",
+  "commands.help.subscribe": "/subscribe — Подписаться на план Pro",
+  "commands.help.categories": "/categories — Управление предпочтениями категорий",
+  "commands.help.language": "/language — Изменить язык",
+
+  "commands.pricing.title": "💳 Планы подписки:",
+  "commands.pricing.plan_name": "📦 {{name}}",
+  "commands.pricing.price_free": "Цена: Бесплатно",
+  "commands.pricing.price_paid": "Цена: ${{price}}/{{period}}",
+  "commands.pricing.free_remaining": "Осталось бесплатных оповещений: {{count}}",
+  "commands.pricing.unlimited_alerts": "Безлимитные оповещения",
+  "commands.pricing.categories_all": "Категории: Все",
+  "commands.pricing.categories_list": "Категории: {{categories}}",
+  "commands.pricing.subscribe_button": "Подписаться на Pro",
+
+  "commands.subscribe.already_pro": "✅ Вы уже на плане Pro! Ваша подписка истекает {{date}}.",
+  "commands.subscribe.initiating": "💳 Инициализация оплаты...",
+
+  "commands.categories.select_prompt": "📂 Выберите категории, которые хотите отслеживать:",
+  "commands.categories.updated": "✅ Категории обновлены! Вы отслеживаете: {{categories}}",
+  "commands.categories.select_at_least_one": "⚠️ Пожалуйста, выберите хотя бы одну категорию перед нажатием Готово.",
+  "commands.categories.none_available": "В данный момент нет доступных категорий. Попробуйте позже.",
+  "commands.categories.done_button": "✅ Готово",
+  "commands.categories.keyboard_back": "Назад",
+  "commands.categories.keyboard_next": "Далее",
+
+  "commands.language.prompt": "🌐 Выберите язык:",
+  "commands.language.changed": "✅ Язык установлен: Русский.",
+  "commands.language.already_set": "Вы уже используете Русский.",
+  "commands.language.en": "English",
+  "commands.language.ru": "Русский",
+  "commands.language.lv": "Latviešu",
+
+  "alerts.whale_with_roi": "🐋 *{{alias}}* \\({{roi}} ROI\\)",
+  "alerts.whale_no_roi": "🐋 *{{alias}}*",
+  "alerts.context_label": "📌 _{{label}}_",
+  "alerts.trade_line": "{{action}} {{outcome}} — {{size}} at {{price}}",
+  "alerts.market_title": "📈 Market: *{{title}}*",
+  "alerts.view_link": "🔗 [View on Polymarket]({{url}})",
+
+  "payments.invoice_description": "Подписка {{planName}} — {{days}} дней",
+  "payments.plan_unavailable": "План больше недоступен.",
+  "payments.user_not_found": "Пользователь не найден.",
+  "payments.validation_error": "Ошибка валидации. Попробуйте снова.",
+  "payments.success": "✅ Вы теперь на плане {{planName}}! Ваша подписка активна до {{endDate}}.",
+
+  "error.generic": "❌ Что-то пошло не так. Попробуйте позже."
+}

@@ -1,0 +1,57 @@
+{
+  "commands.start.welcome_title": "🐋 Laipni lūdzam WhaleRadar!",
+  "commands.start.welcome_description": "Sekojiet lielo tirdzniecību prognožu tirgos reāllaikā.",
+  "commands.start.language_detected": "🌐 Noteikta valoda: Latviešu",
+  "commands.start.quota_explanation": "📊 Jums ir {{count}} bezmaksas brīdinājumi. Pēc tam pārejiet uz Pro neierobežotiem brīdinājumiem!\n\nIevadiet /pricing, lai skatītu plānus.",
+
+  "commands.help.title": "📖 Pieejamās komandas:",
+  "commands.help.start": "/start — Sākt botu un iestatīt preferences",
+  "commands.help.help": "/help — Parādīt šo palīdzības ziņojumu",
+  "commands.help.pricing": "/pricing — Skatīt abonēšanas plānus",
+  "commands.help.subscribe": "/subscribe — Abonēt Pro plānu",
+  "commands.help.categories": "/categories — Pārvaldīt kategoriju preferences",
+  "commands.help.language": "/language — Mainīt valodu",
+
+  "commands.pricing.title": "💳 Abonēšanas plāni:",
+  "commands.pricing.plan_name": "📦 {{name}}",
+  "commands.pricing.price_free": "Cena: Bezmaksas",
+  "commands.pricing.price_paid": "Cena: ${{price}}/{{period}}",
+  "commands.pricing.free_remaining": "Atlikušie bezmaksas brīdinājumi: {{count}}",
+  "commands.pricing.unlimited_alerts": "Neierobežoti brīdinājumi",
+  "commands.pricing.categories_all": "Kategorijas: Visas",
+  "commands.pricing.categories_list": "Kategorijas: {{categories}}",
+  "commands.pricing.subscribe_button": "Abonēt Pro",
+
+  "commands.subscribe.already_pro": "✅ Jūs jau esat Pro plānā! Jūsu abonements beidzas {{date}}.",
+  "commands.subscribe.initiating": "💳 Maksājuma uzsākšana...",
+
+  "commands.categories.select_prompt": "📂 Izvēlieties kategorijas, kuras vēlaties sekot:",
+  "commands.categories.updated": "✅ Kategorijas atjauninātas! Jūs tagad sekojat: {{categories}}",
+  "commands.categories.select_at_least_one": "⚠️ Lūdzu, atlasiet vismaz vienu kategoriju pirms nospiežat Gatavs.",
+  "commands.categories.none_available": "Pašlaik nav pieejamu kategoriju. Lūdzu, mēģiniet vēlāk.",
+  "commands.categories.done_button": "✅ Gatavs",
+  "commands.categories.keyboard_back": "Atpakaļ",
+  "commands.categories.keyboard_next": "Tālāk",
+
+  "commands.language.prompt": "🌐 Izvēlieties valodu:",
+  "commands.language.changed": "✅ Valoda iestatīta: Latviešu.",
+  "commands.language.already_set": "Jūs jau izmantojat Latviešu.",
+  "commands.language.en": "English",
+  "commands.language.ru": "Русский",
+  "commands.language.lv": "Latviešu",
+
+  "alerts.whale_with_roi": "🐋 *{{alias}}* \\({{roi}} ROI\\)",
+  "alerts.whale_no_roi": "🐋 *{{alias}}*",
+  "alerts.context_label": "📌 _{{label}}_",
+  "alerts.trade_line": "{{action}} {{outcome}} — {{size}} at {{price}}",
+  "alerts.market_title": "📈 Market: *{{title}}*",
+  "alerts.view_link": "🔗 [View on Polymarket]({{url}})",
+
+  "payments.invoice_description": "{{planName}} abonēšana — {{days}} dienas",
+  "payments.plan_unavailable": "Plāns vairs nav pieejams.",
+  "payments.user_not_found": "Lietotājs nav atrasts.",
+  "payments.validation_error": "Validācijas kļūda. Lūdzu, mēģiniet vēlreiz.",
+  "payments.success": "✅ Jūs tagad esat {{planName}} plānā! Jūsu abonements ir aktīvs līdz {{endDate}}.",
+
+  "error.generic": "❌ Kaut kas nogāja greizi. Lūdzu, mēģiniet vēlāk."
+}

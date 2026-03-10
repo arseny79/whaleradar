@@ -1,0 +1,57 @@
+{
+  "commands.start.welcome_title": "🐋 Welcome to WhaleRadar!",
+  "commands.start.welcome_description": "Track whale trades on prediction markets in real time.",
+  "commands.start.language_detected": "🌐 Language detected: English",
+  "commands.start.quota_explanation": "📊 You have {{count}} free alerts. After that, upgrade to Pro for unlimited alerts!\n\nType /pricing to see plans.",
+
+  "commands.help.title": "📖 Available commands:",
+  "commands.help.start": "/start — Start the bot and set up your preferences",
+  "commands.help.help": "/help — Show this help message",
+  "commands.help.pricing": "/pricing — View subscription plans",
+  "commands.help.subscribe": "/subscribe — Subscribe to Pro plan",
+  "commands.help.categories": "/categories — Manage your category preferences",
+  "commands.help.language": "/language — Change language",
+
+  "commands.pricing.title": "💳 Subscription Plans:",
+  "commands.pricing.plan_name": "📦 {{name}}",
+  "commands.pricing.price_free": "Price: Free",
+  "commands.pricing.price_paid": "Price: ${{price}}/{{period}}",
+  "commands.pricing.free_remaining": "Free alerts remaining: {{count}}",
+  "commands.pricing.unlimited_alerts": "Unlimited alerts",
+  "commands.pricing.categories_all": "Categories: All",
+  "commands.pricing.categories_list": "Categories: {{categories}}",
+  "commands.pricing.subscribe_button": "Subscribe to Pro",
+
+  "commands.subscribe.already_pro": "✅ You're already on the Pro plan! Your subscription expires on {{date}}.",
+  "commands.subscribe.initiating": "💳 Initiating payment...",
+
+  "commands.categories.select_prompt": "📂 Choose the categories you want to follow:",
+  "commands.categories.updated": "✅ Categories updated! You're now following: {{categories}}",
+  "commands.categories.select_at_least_one": "⚠️ Please select at least one category before pressing Done.",
+  "commands.categories.none_available": "No categories are currently available. Please try again later.",
+  "commands.categories.done_button": "✅ Done",
+  "commands.categories.keyboard_back": "Back",
+  "commands.categories.keyboard_next": "Next",
+
+  "commands.language.prompt": "🌐 Select your language:",
+  "commands.language.changed": "✅ Language set to English.",
+  "commands.language.already_set": "You're already using English.",
+  "commands.language.en": "English",
+  "commands.language.ru": "Русский",
+  "commands.language.lv": "Latviešu",
+
+  "alerts.whale_with_roi": "🐋 *{{alias}}* \\({{roi}} ROI\\)",
+  "alerts.whale_no_roi": "🐋 *{{alias}}*",
+  "alerts.context_label": "📌 _{{label}}_",
+  "alerts.trade_line": "{{action}} {{outcome}} — {{size}} at {{price}}",
+  "alerts.market_title": "📈 Market: *{{title}}*",
+  "alerts.view_link": "🔗 [View on Polymarket]({{url}})",
+
+  "payments.invoice_description": "{{planName}} subscription — {{days}} days",
+  "payments.plan_unavailable": "Plan is no longer available.",
+  "payments.user_not_found": "User not found.",
+  "payments.validation_error": "Validation error. Please try again.",
+  "payments.success": "✅ You're now on the {{planName}} plan! Your subscription is active until {{endDate}}.",
+
+  "error.generic": "❌ Something went wrong. Please try again later."
+}
